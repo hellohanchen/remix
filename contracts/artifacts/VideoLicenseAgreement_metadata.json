@@ -1,0 +1,64 @@
+{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "agreement",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/LicenseAgreeement.sol": "VideoLicenseAgreement"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/LicenseAgreeement.sol": {
+			"keccak256": "0xe2238fa3f4e84e5a6b93e646207144ae67c981e28e8bef9c7d9de6314c6d2b74",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://514803e60b95fb38806992b59728ebe3a1d98c4921e4a86a5e2226b35b1b03f1",
+				"dweb:/ipfs/QmR86B4Kg2qyfhJYAtd7n8AR4GHTd9ik5qC7EWW2c75gQk"
+			]
+		}
+	},
+	"version": 1
+}

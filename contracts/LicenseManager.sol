@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import {ILicense} from "./ILicense.sol";
+
 type LID is uint256;
 
 contract LicenseManager {
@@ -14,6 +16,10 @@ contract LicenseManager {
         require(_owner == msg.sender, "owner access only");
         
         _;
+    }
+
+    function transferOwnership(address owner) public onlyOwner() {
+        _owner = owner;
     }
 
     // all kinds of licenses
@@ -58,10 +64,14 @@ contract LicenseManager {
         _;
     }
 
+    function getVideoOwner(string memory vid) public view returns(address) {
+        return _videoOwners[vid];
+    }
+
     function addVideo(string memory vid, address payable licensor, uint256 nonce, bytes memory signature) public onlyOwner {
         bytes memory vidBytes = bytes(vid); // Uses memory
         require(vidBytes.length > 0, "invalid video id");
-        require(this.verify(licensor, vid, licensorAgreement, nonce, signature), "invalid licensor signature");
+        require(this.verifyLicensor(licensor, vid, nonce, signature), "invalid licensor signature");
 
         if (_videoOwners[vid] == address(0)) {
             _videoOwners[vid] = licensor;
@@ -122,27 +132,27 @@ contract LicenseManager {
     // purchases
     string constant public licenseeAgreement = "I certify that I am the licensee of the video agreement and agree to all terms defined in the agreement.";
 
-    mapping(LID => mapping(address => uint256)) private _licensePurchases;
+    mapping(LID => mapping(address => uint256)) private _licenseLicensees;
 
-    // TODO: use signature verification
     function buyLicense(LID licenseId, uint256 nonce, bytes memory signature) public payable licenseActive(licenseId) {
         require(msg.value >= this.getLicensePrice(licenseId), "not enough ether");
-        require(this.verifyLicensee(msg.sender, licenseId, licenseeAgreement, nonce, signature), "invalid licensee signature");
+        require(this.verifyLicensee(msg.sender, licenseId, nonce, signature), "invalid licensee signature");
 
         uint256 price = this.getLicensePrice(licenseId);
         address payable to = this.getLicenseOwner(licenseId);
         (bool sent, ) = to.call{value: price}("");
         require(sent, "failed to send ether");
 
-        _licensePurchases[licenseId][msg.sender] = block.timestamp;
+        _licenseLicensees[licenseId][msg.sender] = block.timestamp;
     }
 
-    function checkApproval(string memory vid, address buyer) public videoExist(vid) view returns(LID[] memory) {
+    function getLicenseeLicenses(string memory vid, address licensee) public videoExist(vid) view returns(LID[] memory) {
         LID[] memory purchased = new LID[](_videoLicenseCounts[vid]);
 
         for (uint256 i = 0; i < _videoLicenseCounts[vid]; i++) {
             LID licenseId = _videoLicenseIDs[vid][i];
-            if (_licensePurchases[licenseId][buyer] != 0) {
+            
+            if (_licenseLicensees[licenseId][licensee] != 0) {
                 purchased[i] = licenseId;
             }
         }
@@ -150,29 +160,22 @@ contract LicenseManager {
         return purchased;
     }
 
-    // signature section
-    function getMessageHash(
-        string memory vid,
-        string memory message,
-        uint256 nonce
-    ) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(vid, message, nonce));
+    function composeLicense(LID licenseId, address licensee) public licenseActive(licenseId) view returns(string memory) {
+        require(_licenseLicensees[licenseId][licensee] != 0, "invalid licensee");
+
+        string memory vid = _licenseVideos[licenseId];
+        address licensor = _videoOwners[vid];
+        address template = _licenseTemplates[licenseId];
+
+        uint256 price = _licensePrices[licenseId];
+        uint256 timestamp = _licenseLicensees[licenseId][licensee];
+
+        ILicense license = ILicense(template);
+        return license.compose(vid, licensor, licensee, price, timestamp);
     }
 
     // signature section
-    function getMessageHashLicensee(
-        LID licenseId,
-        string memory message,
-        uint256 nonce
-    ) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(licenseId, message, nonce));
-    }
-
-    function getEthSignedMessageHash(bytes32 _messageHash)
-        public
-        pure
-        returns (bytes32)
-    {
+    function getEthSignedMessageHash(bytes32 _messageHash) public pure returns (bytes32) {
         /*
         Signature is produced by signing a keccak256 hash with the following format:
         "\x19Ethereum Signed Message\n" + len(msg) + msg
@@ -182,46 +185,35 @@ contract LicenseManager {
         );
     }
 
-    function verify(
-        address signer,
-        string memory vid,
-        string memory message,
-        uint256 nonce,
-        bytes memory signature
-    ) public pure returns (bool) {
-        bytes32 messageHash = getMessageHash(vid, message, nonce);
+    function getLicensorMessageHash(string memory vid, uint256 nonce) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(vid, licensorAgreement, nonce));
+    }
+
+    function verifyLicensor(address signer, string memory vid, uint256 nonce, bytes memory signature) public pure returns (bool) {
+        bytes32 messageHash = getLicensorMessageHash(vid, nonce);
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         return recoverSigner(ethSignedMessageHash, signature) == signer;
     }
 
-    function verifyLicensee(
-        address signer,
-        LID licenseId,
-        string memory message,
-        uint256 nonce,
-        bytes memory signature
-    ) public pure returns (bool) {
-        bytes32 messageHash = getMessageHashLicensee(licenseId, message, nonce);
+    function getLicenseeMessageHash(LID licenseId, uint256 nonce) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(licenseId, licenseeAgreement, nonce));
+    }
+
+    function verifyLicensee(address signer, LID licenseId, uint256 nonce, bytes memory signature) public pure returns (bool) {
+        bytes32 messageHash = getLicenseeMessageHash(licenseId, nonce);
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         return recoverSigner(ethSignedMessageHash, signature) == signer;
     }
 
-    function recoverSigner(
-        bytes32 _ethSignedMessageHash,
-        bytes memory _signature
-    ) public pure returns (address) {
+    function recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature) public pure returns (address) {
         (bytes32 r, bytes32 s, uint8 v) = splitSignature(_signature);
 
         return ecrecover(_ethSignedMessageHash, v, r, s);
     }
 
-    function splitSignature(bytes memory sig)
-        public
-        pure
-        returns (bytes32 r, bytes32 s, uint8 v)
-    {
+    function splitSignature(bytes memory sig) public pure returns (bytes32 r, bytes32 s, uint8 v) {
         require(sig.length == 65, "invalid signature length");
 
         assembly {
@@ -244,4 +236,6 @@ contract LicenseManager {
 
         // implicitly return (r, s, v)
     }
+
+
 }

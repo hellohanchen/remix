@@ -6,24 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [],
-				"name": "agreement",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "string",
@@ -59,7 +41,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -72,7 +54,7 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -85,7 +67,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -98,7 +80,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -115,7 +97,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/LicenseAgreeement.sol": "VideoLicenseAgreement"
+			"contracts/ILicense.sol": "ILicense"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -135,14 +117,6 @@
 			"urls": [
 				"bzz-raw://7511266d02a43bfcf544c15a70c59f9adb41a9d9b405b1fac86cf0eb4c42aea9",
 				"dweb:/ipfs/QmXWM9nhCGc97wCWeqjWYpthateY7NLmFdQqRj3YADgF4C"
-			]
-		},
-		"contracts/LicenseAgreeement.sol": {
-			"keccak256": "0x86d031f04dc7093b3918effae54232c6b36f0051f0f27926f81f8810d1f7448e",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://1d5227fb0694e731d2486e885e0914970ac64a5eab09a862ba044026f7f85f36",
-				"dweb:/ipfs/QmVJr5oXRquQFyoWyFQf4DNHNvm1zWfSkbuH7eGXjR6nDY"
 			]
 		}
 	},

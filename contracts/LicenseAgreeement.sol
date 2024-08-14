@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract VideoLicenseAgreement {
+import {ILicense} from "./ILicense.sol";
+
+contract VideoLicenseAgreement is ILicense {
     string constant public agreement = "" 
         "Licensing Agreement\n\n" 
         "1. Grant of License\n" 
@@ -26,4 +28,26 @@ contract VideoLicenseAgreement {
         "- [Your Signature/Your Company's Signature]\n\n";
 
     constructor() {}
+
+    function getName() external pure returns (string memory) {
+        return "Test License";
+    }
+
+    function getDuration() external pure returns (uint256) {
+        return 0;
+    }
+
+    function getTemplate() external pure returns (string memory) {
+        return agreement;
+    }
+
+    function compose(
+        string memory identifier,
+        address licensor,
+        address licensee,
+        uint256 price,
+        uint256 signTimestamp
+    ) external pure returns (string memory) {
+        return agreement;
+    }
 }

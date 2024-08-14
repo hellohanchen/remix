@@ -148,22 +148,22 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "vid",
-						"type": "string"
+						"internalType": "LID",
+						"name": "licenseId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "address",
-						"name": "buyer",
+						"name": "licensee",
 						"type": "address"
 					}
 				],
-				"name": "checkApproval",
+				"name": "composeLicense",
 				"outputs": [
 					{
-						"internalType": "LID[]",
+						"internalType": "string",
 						"name": "",
-						"type": "uint256[]"
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -272,9 +272,28 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string",
-						"name": "message",
-						"type": "string"
+						"internalType": "address",
+						"name": "licensee",
+						"type": "address"
+					}
+				],
+				"name": "getLicenseeLicenses",
+				"outputs": [
+					{
+						"internalType": "LID[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "LID",
+						"name": "licenseId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -282,7 +301,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getMessageHash",
+				"name": "getLicenseeMessageHash",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -296,13 +315,8 @@
 			{
 				"inputs": [
 					{
-						"internalType": "LID",
-						"name": "licenseId",
-						"type": "uint256"
-					},
-					{
 						"internalType": "string",
-						"name": "message",
+						"name": "vid",
 						"type": "string"
 					},
 					{
@@ -311,7 +325,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getMessageHashLicensee",
+				"name": "getLicensorMessageHash",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -431,18 +445,26 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "signer",
 						"type": "address"
 					},
 					{
-						"internalType": "string",
-						"name": "vid",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "message",
-						"type": "string"
+						"internalType": "LID",
+						"name": "licenseId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
@@ -455,7 +477,7 @@
 						"type": "bytes"
 					}
 				],
-				"name": "verify",
+				"name": "verifyLicensee",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -474,13 +496,8 @@
 						"type": "address"
 					},
 					{
-						"internalType": "LID",
-						"name": "licenseId",
-						"type": "uint256"
-					},
-					{
 						"internalType": "string",
-						"name": "message",
+						"name": "vid",
 						"type": "string"
 					},
 					{
@@ -494,7 +511,7 @@
 						"type": "bytes"
 					}
 				],
-				"name": "verifyLicensee",
+				"name": "verifyLicensor",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -533,12 +550,20 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/LicenseManager.sol": {
-			"keccak256": "0x08be30d85fe16a9569551ee4512aec50e3ff85b5ee08315ea075133cb3e03f99",
+		"contracts/ILicense.sol": {
+			"keccak256": "0xf850b9839653f8a4643951677df738e42011aa258e0bd74f4859e23c116948ed",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6c510448e20c9a6cbd77f87bd80f44c036893b13e0164a9f367579856ffddc68",
-				"dweb:/ipfs/QmYoyCWMKfFWuE7dVYPb6x5i831cEgvVgRkpEzqxbD1WEz"
+				"bzz-raw://7511266d02a43bfcf544c15a70c59f9adb41a9d9b405b1fac86cf0eb4c42aea9",
+				"dweb:/ipfs/QmXWM9nhCGc97wCWeqjWYpthateY7NLmFdQqRj3YADgF4C"
+			]
+		},
+		"contracts/LicenseManager.sol": {
+			"keccak256": "0x1e0a894be12b59bab5c7f264d6e5c48ce75f12a67c574af168000f6def3d195f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a72ac2c14d19c42ed823d049d3ff56640f82a4b14d440f0b335e8c0ec34e035",
+				"dweb:/ipfs/QmRKPzZuHSugouBiUhQHSHwaGjN5syYyrmqYHWZkMQr4nv"
 			]
 		}
 	},

@@ -8,8 +8,8 @@ type LID is uint256;
 contract LicenseManager {
     address private _owner;
 
-    constructor() {
-        _owner = msg.sender;
+    constructor(address owner) {
+        _owner = owner;
     }
 
     modifier onlyOwner {

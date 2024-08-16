@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -337,6 +343,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "vid",
+						"type": "string"
+					}
+				],
+				"name": "getVideoOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "licenseeAgreement",
 				"outputs": [
@@ -559,11 +584,11 @@
 			]
 		},
 		"contracts/LicenseManager.sol": {
-			"keccak256": "0x1e0a894be12b59bab5c7f264d6e5c48ce75f12a67c574af168000f6def3d195f",
+			"keccak256": "0xe4a384980a3aa1e6f9d9ff1194a28f1e0c168e8e3c5ee3cdca8e6c77047adafa",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6a72ac2c14d19c42ed823d049d3ff56640f82a4b14d440f0b335e8c0ec34e035",
-				"dweb:/ipfs/QmRKPzZuHSugouBiUhQHSHwaGjN5syYyrmqYHWZkMQr4nv"
+				"bzz-raw://28241db96d81e81465c80525a01766e476c062814c39c58c5c8c90b463d0d6fb",
+				"dweb:/ipfs/QmfCeT57hcyijMzbGgoEAj5vBaPQezfJNDQf2HEPzD1Rsn"
 			]
 		}
 	},

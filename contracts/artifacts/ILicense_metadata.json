@@ -97,7 +97,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/ILicense.sol": "ILicense"
+			"contracts/LicenseManager_flattened.sol": "ILicense"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -111,12 +111,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/ILicense.sol": {
-			"keccak256": "0xf850b9839653f8a4643951677df738e42011aa258e0bd74f4859e23c116948ed",
-			"license": "MIT",
+		"contracts/LicenseManager_flattened.sol": {
+			"keccak256": "0x0edc6df3f22b3274100db9e16d0c7891ab4085f2134b596b57aed5119f9272ff",
 			"urls": [
-				"bzz-raw://7511266d02a43bfcf544c15a70c59f9adb41a9d9b405b1fac86cf0eb4c42aea9",
-				"dweb:/ipfs/QmXWM9nhCGc97wCWeqjWYpthateY7NLmFdQqRj3YADgF4C"
+				"bzz-raw://c9cf4f95d0222a599ebeba7392910221535da409cffbaf04517294910acd42dc",
+				"dweb:/ipfs/QmWMpvHwZzEcBeEJAwfguLUjTcsfpowVCK2Q5ADGgADmXD"
 			]
 		}
 	},

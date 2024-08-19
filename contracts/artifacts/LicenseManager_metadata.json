@@ -70,11 +70,6 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
-					},
-					{
 						"internalType": "bytes",
 						"name": "signature",
 						"type": "bytes"
@@ -96,11 +91,6 @@
 						"internalType": "address payable",
 						"name": "licensor",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
 					},
 					{
 						"internalType": "bytes",
@@ -136,11 +126,6 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
-					},
-					{
 						"internalType": "bytes",
 						"name": "signature",
 						"type": "bytes"
@@ -173,25 +158,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_messageHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "getEthSignedMessageHash",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -297,54 +263,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "LID",
-						"name": "licenseId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
-					}
-				],
-				"name": "getLicenseeMessageHash",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "vid",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
-					}
-				],
-				"name": "getLicensorMessageHash",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "string",
 						"name": "vid",
 						"type": "string"
@@ -390,13 +308,13 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_ethSignedMessageHash",
-						"type": "bytes32"
+						"internalType": "string",
+						"name": "message",
+						"type": "string"
 					},
 					{
 						"internalType": "bytes",
-						"name": "_signature",
+						"name": "sig",
 						"type": "bytes"
 					}
 				],
@@ -440,35 +358,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes",
-						"name": "sig",
-						"type": "bytes"
-					}
-				],
-				"name": "splitSignature",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "r",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "s",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "v",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
@@ -489,11 +378,6 @@
 					{
 						"internalType": "LID",
 						"name": "licenseId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nonce",
 						"type": "uint256"
 					},
 					{
@@ -524,11 +408,6 @@
 						"internalType": "string",
 						"name": "vid",
 						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "nonce",
-						"type": "uint256"
 					},
 					{
 						"internalType": "bytes",
@@ -575,6 +454,30 @@
 		"remappings": []
 	},
 	"sources": {
+		"@openzeppelin/contracts/utils/Strings.sol": {
+			"keccak256": "0x55f102ea785d8399c0e58d1108e2d289506dde18abc6db1b7f68c1f9f9bc5792",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6e52e0a7765c943ef14e5bcf11e46e6139fa044be564881378349236bf2e3453",
+				"dweb:/ipfs/QmZEeeXoFPW47amyP35gfzomF9DixqqTEPwzBakv6cZw6i"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/Math.sol": {
+			"keccak256": "0x005ec64c6313f0555d59e278f9a7a5ab2db5bdc72a027f255a37c327af1ec02d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4ece9f0b9c8daca08c76b6b5405a6446b6f73b3a15fab7ff56e296cbd4a2c875",
+				"dweb:/ipfs/QmQyRpyPRL5SQuAgj6SHmbir3foX65FJjbVTTQrA2EFg6L"
+			]
+		},
+		"@openzeppelin/contracts/utils/math/SignedMath.sol": {
+			"keccak256": "0x5f7e4076e175393767754387c962926577f1660dd9b810187b9002407656be72",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7d533a1c97cd43a57cd9c465f7ee8dd0e39ae93a8fb8ff8e5303a356b081cdcc",
+				"dweb:/ipfs/QmVBEei6aTnvYNZp2CHYVNKyZS4q1KkjANfY39WVXZXVoT"
+			]
+		},
 		"contracts/ILicense.sol": {
 			"keccak256": "0xf850b9839653f8a4643951677df738e42011aa258e0bd74f4859e23c116948ed",
 			"license": "MIT",
@@ -584,11 +487,11 @@
 			]
 		},
 		"contracts/LicenseManager.sol": {
-			"keccak256": "0xe4a384980a3aa1e6f9d9ff1194a28f1e0c168e8e3c5ee3cdca8e6c77047adafa",
+			"keccak256": "0xf41733de6c958995cdf8ed5cbf43e42c4702a72f6b1477df79c5a701fea1b3ef",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://28241db96d81e81465c80525a01766e476c062814c39c58c5c8c90b463d0d6fb",
-				"dweb:/ipfs/QmfCeT57hcyijMzbGgoEAj5vBaPQezfJNDQf2HEPzD1Rsn"
+				"bzz-raw://851bb69011ba730d625158c001559b3d87f164bba3809274f92fc7eb7bf8cdf2",
+				"dweb:/ipfs/QmNWC8gCXm3WJM8GHwfhSowpQR2BD2MFtG6Vgyg9DJci3j"
 			]
 		}
 	},

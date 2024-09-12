@@ -580,10 +580,31 @@ library Strings {
     }
 }
 
+// File: @openzeppelin/contracts/interfaces/IERC1271.sol
+
+
+// OpenZeppelin Contracts (last updated v5.0.0) (interfaces/IERC1271.sol)
+
+pragma solidity ^0.8.20;
+
+/**
+ * @dev Interface of the ERC1271 standard signature validation method for
+ * contracts as defined in https://eips.ethereum.org/EIPS/eip-1271[ERC-1271].
+ */
+interface IERC1271 {
+    /**
+     * @dev Should return whether the signature provided is valid for the provided data
+     * @param hash      Hash of the data to be signed
+     * @param signature Signature byte array associated with _data
+     */
+    function isValidSignature(bytes32 hash, bytes memory signature) external view returns (bytes4 magicValue);
+}
+
 // File: contracts/LicenseManager.sol
 
 
 pragma solidity ^0.8.20;
+
 
 
 
@@ -624,6 +645,7 @@ contract LicenseManager {
 
     constructor(address owner) {
         _owner = owner;
+        _licenseCreated[LID.wrap(0)] = true; // reserve license id as invalid id
     }
 
     modifier onlyOwner() {
@@ -691,7 +713,7 @@ contract LicenseManager {
         bytes memory vidBytes = bytes(vid); // Uses memory
         require(vidBytes.length > 0, "invalid video id");
         require(
-            verifyLicensor(licensor, vid, signature),
+            _verifyLicensor(licensor, vid, signature),
             "invalid licensor signature"
         );
 
@@ -755,6 +777,25 @@ contract LicenseManager {
     }
 
     // get license info
+    function getVideoLicenses(string memory vid)
+        public
+        view
+        videoExist(vid)
+        returns (LID[] memory)
+    {
+        LID[] memory licenses = new LID[](_videoLicenseCounts[vid]);
+
+        for (uint256 i = 0; i < _videoLicenseCounts[vid]; i++) {
+            LID licenseId = _videoLicenseIDs[vid][i];
+
+            if (_licenseActivated[licenseId]) {
+                licenses[i] = licenseId;
+            }
+        }
+
+        return licenses;
+    }
+
     function getLicenseVideo(LID licenseId)
         public
         view
@@ -797,16 +838,17 @@ contract LicenseManager {
 
     mapping(LID => mapping(address => uint256)) private _licenseLicensees;
 
-    function buyLicense(
-        LID licenseId,
-        bytes calldata signature
-    ) public payable licenseActive(licenseId) {
+    function buyLicense(LID licenseId, bytes calldata signature)
+        public
+        payable
+        licenseActive(licenseId)
+    {
         require(
             msg.value >= this.getLicensePrice(licenseId),
             "not enough ether"
         );
         require(
-            verifyLicensee(msg.sender, licenseId, signature),
+            _verifyLicensee(msg.sender, licenseId, signature),
             "invalid licensee signature"
         );
 
@@ -818,7 +860,7 @@ contract LicenseManager {
         _licenseLicensees[licenseId][msg.sender] = block.timestamp;
     }
 
-    function getLicenseeLicenses(string memory vid, address licensee)
+    function getLicensesOfVideoAndLicensee(string memory vid, address licensee)
         public
         view
         videoExist(vid)
@@ -835,6 +877,14 @@ contract LicenseManager {
         }
 
         return purchased;
+    }
+
+    function getPurchaseTime(LID licenseId, address licensee)
+        public
+        view
+        returns (uint256)
+    {
+        return _licenseLicensees[licenseId][licensee];
     }
 
     function composeLicense(LID licenseId, address licensee)
@@ -858,31 +908,7 @@ contract LicenseManager {
         ILicense license = ILicense(template);
         return license.compose(vid, licensor, licensee, price, timestamp);
     }
-
-    function verifyLicensor(
-        address signer,
-        string memory vid,
-        bytes calldata signature
-    ) public pure returns (bool) {
-
-        return recoverSigner(vid, signature) == signer;
-    }
-
-    function verifyLicensee(
-        address signer,
-        LID licenseId,
-        bytes calldata signature
-    ) public pure returns (bool) {
-        return recoverSigner(Strings.toString(LID.unwrap(licenseId)), signature) == signer;
-    }
-
-    // Helper function
-    function _ecrecover(
-        string memory message,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) internal pure returns (address) {
+    function _getMessageHash(string memory message) internal pure returns (bytes32) {
         // Compute the EIP-191 prefixed message
         bytes memory prefixedMessage = abi.encodePacked(
             "\x19Ethereum Signed Message:\n",
@@ -893,11 +919,23 @@ contract LicenseManager {
         // Compute the message digest
         bytes32 digest = keccak256(prefixedMessage);
 
+        return digest;
+    }
+
+    // Helper function
+    function _ecrecover(
+        string memory message,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal pure returns (address) {
+        bytes32 digest = _getMessageHash(message);
+
         // Use the native ecrecover provided by the EVM
         return ecrecover(digest, v, r, s);
     }
 
-    function recoverSigner(string memory message, bytes calldata sig)
+    function _recoverSigner(string memory message, bytes calldata sig)
         public
         pure
         returns (address)
@@ -916,5 +954,41 @@ contract LicenseManager {
         }
 
         return _ecrecover(message, v, r, s);
+    }
+
+    function verifySigner(
+        address signer,
+        string memory message,
+        bytes calldata signature
+    ) public view returns (bool) {
+        // Try EOA verification
+        address eoaSigner = _recoverSigner(message, signature);
+
+        if (eoaSigner == signer) {
+            return true;
+        }
+
+        // Try EIP1271 verification
+        bytes32 digest = _getMessageHash(message);
+        IERC1271 contractSigner = IERC1271(signer);
+        bytes4 result = contractSigner.isValidSignature(digest, signature);
+
+        return result == 0x1626ba7e;
+    }
+
+    function _verifyLicensor(
+        address signer,
+        string memory vid,
+        bytes calldata signature
+    ) internal view returns (bool) {
+        return verifySigner(signer, vid, signature);
+    }
+
+    function _verifyLicensee(
+        address signer,
+        LID licenseId,
+        bytes calldata signature
+    ) internal view returns (bool) {
+        return verifySigner(signer, Strings.toString(LID.unwrap(licenseId)), signature);
     }
 }

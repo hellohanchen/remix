@@ -20,6 +20,30 @@
 				"inputs": [
 					{
 						"internalType": "string",
+						"name": "message",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes",
+						"name": "sig",
+						"type": "bytes"
+					}
+				],
+				"name": "_recoverSigner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
 						"name": "vid",
 						"type": "string"
 					},
@@ -249,7 +273,50 @@
 						"type": "address"
 					}
 				],
-				"name": "getLicenseeLicenses",
+				"name": "getLicensesOfVideoAndLicensee",
+				"outputs": [
+					{
+						"internalType": "LID[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "LID",
+						"name": "licenseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "licensee",
+						"type": "address"
+					}
+				],
+				"name": "getPurchaseTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "vid",
+						"type": "string"
+					}
+				],
+				"name": "getVideoLicenses",
 				"outputs": [
 					{
 						"internalType": "LID[]",
@@ -271,7 +338,7 @@
 				"name": "getVideoOwner",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "address payable",
 						"name": "",
 						"type": "address"
 					}
@@ -303,30 +370,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "message",
-						"type": "string"
-					},
-					{
-						"internalType": "bytes",
-						"name": "sig",
-						"type": "bytes"
-					}
-				],
-				"name": "recoverSigner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -376,37 +419,8 @@
 						"type": "address"
 					},
 					{
-						"internalType": "LID",
-						"name": "licenseId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes",
-						"name": "signature",
-						"type": "bytes"
-					}
-				],
-				"name": "verifyLicensee",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "signer",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
-						"name": "vid",
+						"name": "message",
 						"type": "string"
 					},
 					{
@@ -415,7 +429,7 @@
 						"type": "bytes"
 					}
 				],
-				"name": "verifyLicensor",
+				"name": "verifySigner",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -423,7 +437,7 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -454,6 +468,14 @@
 		"remappings": []
 	},
 	"sources": {
+		"@openzeppelin/contracts/interfaces/IERC1271.sol": {
+			"keccak256": "0x85a45f3f10014a0f8be41157a32b6a5f905753ea64a4b64e29fc12b7deeecf39",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c3c74009ce36136b36c77c23935b8e4a7b4f253be2da2be4fb4a916b1ce43743",
+				"dweb:/ipfs/QmcH36v3iN7SJJuF73AunLR2LtNxhVJ1wm63ph4dPZ4pcL"
+			]
+		},
 		"@openzeppelin/contracts/utils/Strings.sol": {
 			"keccak256": "0x55f102ea785d8399c0e58d1108e2d289506dde18abc6db1b7f68c1f9f9bc5792",
 			"license": "MIT",
@@ -487,11 +509,11 @@
 			]
 		},
 		"contracts/LicenseManager.sol": {
-			"keccak256": "0xf41733de6c958995cdf8ed5cbf43e42c4702a72f6b1477df79c5a701fea1b3ef",
+			"keccak256": "0x5ec2488ccdc068fee155da9520da0ff9b3860b4654e6071378fe70b3bbea1df0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://851bb69011ba730d625158c001559b3d87f164bba3809274f92fc7eb7bf8cdf2",
-				"dweb:/ipfs/QmNWC8gCXm3WJM8GHwfhSowpQR2BD2MFtG6Vgyg9DJci3j"
+				"bzz-raw://19915873d8f4988f9f7bc5100bc58127bae5b636b1bad0f434d7d4a7b3b6512c",
+				"dweb:/ipfs/QmeDPjDBZmHwFkGFYMHqg44jQSj5j4xmGPCyRES61YTMEi"
 			]
 		}
 	},
